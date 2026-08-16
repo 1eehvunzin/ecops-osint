@@ -1,0 +1,48 @@
+* {
+  box-sizing: border-box;
+}
+
+html, body, #root {
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Helvetica Neue', sans-serif;
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(140, 140, 150, 0.5);
+  border-radius: 6px;
+  border: 2px solid transparent;
+  background-clip: padding-box;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+a {
+  color: #0a84ff;
+}
+a:hover {
+  color: #409cff;
+}
+
+input, button, textarea {
+  font-family: inherit;
+}
+
+@keyframes bubbleIn {
+  from { opacity: 0; transform: translateY(9px); }
+  to { opacity: 1; transform: none; }
+}
+
+@keyframes sendPulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(10, 132, 255, 0.55); opacity: 1; }
+  50% { box-shadow: 0 0 0 7px rgba(10, 132, 255, 0); opacity: 0.55; }
+}
