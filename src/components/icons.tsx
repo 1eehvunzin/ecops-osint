@@ -28,13 +28,13 @@ export function IconWifi({ size = 15, style, className }: IconProps) {
   );
 }
 
-export function IconBattery({ size = 15, pct = 82, style, className }: IconProps & { pct?: number }) {
+export function IconBattery({ size = 15, pct = 82, fillColor, style, className }: IconProps & { pct?: number; fillColor?: string }) {
   const w = 21.5;
   const fillW = Math.max(1.5, (w - 2.8) * (pct / 100));
   return (
     <svg className={className} style={{ ...base(size), height: size * (13 / 27), width: size, ...style }} viewBox="0 0 27 13" fill="none">
       <rect x="0.9" y="1.9" width={w} height="9.2" rx="2.6" stroke="currentColor" strokeOpacity="0.7" strokeWidth="1" />
-      <rect x="2.3" y="3.3" width={fillW} height="6.4" rx="1.4" fill="currentColor" />
+      <rect x="2.3" y="3.3" width={fillW} height="6.4" rx="1.4" fill={fillColor ?? 'currentColor'} />
       <path d="M24 4.6v3.8c1-.3 1-3.5 0-3.8z" fill="currentColor" opacity="0.7" />
     </svg>
   );

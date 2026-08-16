@@ -128,22 +128,14 @@ export default function Inbox({ state, actions }: { state: AppState; actions: Ac
               ← Inbox
             </button>
             <div style={{ fontSize: 17, fontWeight: 700, color: '#1c1c1e' }}>연합세미나 참석 인원 확인 부탁드립니다</div>
-            <div style={{ fontSize: 12, color: '#8a8a8e', margin: '4px 0 16px' }}>from 연합세미나 운영팀 · 첨부: 참석신청현황.txt</div>
+            <div style={{ fontSize: 12, color: '#8a8a8e', margin: '4px 0 16px' }}>from 연합세미나 운영팀</div>
             <p style={{ fontSize: 14, lineHeight: 1.7, color: '#2c2c2e' }}>
-              오늘 연합세미나에 E-COPS 부원이 <b>총 몇 명</b> 참석할 예정인지 회신 부탁드립니다.
+              지금 연합세미나 현장에 <b>실제로 있는</b> E-COPS 부원이 총 몇 명인지 회신 부탁드립니다.
               <br />
               <span style={{ color: '#c0392b', fontSize: 12.5 }}>※ 세미나 시작 전까지 회신이 없으면 자동으로 참가 취소 처리됩니다.</span>
             </p>
             <div style={{ marginTop: 14, background: '#f4f4f6', border: '0.5px solid #e0e0e3', borderRadius: 10, padding: '12px 14px', fontSize: 12.5, color: '#1c1c1e', lineHeight: 1.9 }}>
-              참석신청현황.txt
-              <br />
-              ─────────────
-              <br />
-              김지훈 · 참석 / 이서연 · 참석 / 박민준 · 불참
-              <br />
-              최유진 · 참석 / 정하늘 · 참석 / 강도현 · 참석
-              <br />
-              조은채 · 불참 / 윤서준 · 참석
+              현재 세미나장에 있는 E-COPS 부원이 몇 명인지 찾아주세요.
             </div>
             <div style={{ display: 'flex', flexWrap: 'wrap', gap: 10, marginTop: 16 }}>
               <button onClick={() => actions.pickM2(0)} style={optStyle(state.m2 ? 'idle' : state.m2bad === 0 ? 'bad' : 'idle')}>① 5명</button>
@@ -179,59 +171,23 @@ export default function Inbox({ state, actions }: { state: AppState; actions: Ac
             <p style={{ fontSize: 14, lineHeight: 1.7, color: '#2c2c2e' }}>
               회장님,
               <br />
-              어젯밤 02시경 회장 PC에서 이상 트래픽이 확인돼 네트워크 캡처를 첨부합니다. 확인 부탁드립니다.
+              어젯밤 02시경 회장 PC에서 이상 트래픽이 확인돼 네트워크 캡처를 첨부합니다. 직접 분석해서 무슨 일이 있었는지 확인해 주세요.
             </p>
             <div style={{ marginTop: 16, border: '0.5px solid #d6d6d9', borderRadius: 10, overflow: 'hidden' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 7, padding: '9px 12px', background: '#f4f4f6', fontSize: 12.5, color: '#3a3a3c', borderBottom: '0.5px solid #e0e0e3' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 7, padding: '11px 14px', background: '#f4f4f6', fontSize: 12.5, color: '#3a3a3c' }}>
                 <IconPaperclip size={12} style={{ color: '#8a8a8e' }} />
-                president_0213.pcap — Log Viewer
-              </div>
-              <div style={{ overflow: 'auto' }}>
-                <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 11.5, whiteSpace: 'nowrap' }}>
-                  <thead>
-                    <tr style={{ background: '#fafafb', color: '#8a8a8e', textAlign: 'left' }}>
-                      <th style={{ padding: '8px 10px', fontWeight: 600 }}>TIME</th>
-                      <th style={{ padding: '8px 10px', fontWeight: 600 }}>SOURCE</th>
-                      <th style={{ padding: '8px 10px', fontWeight: 600 }}>ACTION</th>
-                      <th style={{ padding: '8px 10px', fontWeight: 600 }}>HASH (MD5)</th>
-                    </tr>
-                  </thead>
-                  <tbody style={{ color: '#2c2c2e' }}>
-                    <tr style={{ borderTop: '0.5px solid #eee' }}>
-                      <td style={{ padding: '7px 10px' }}>02:08:01</td>
-                      <td style={{ padding: '7px 10px' }}>ECOPS-PC-01</td>
-                      <td style={{ padding: '7px 10px' }}>GET /webmail/login</td>
-                      <td style={{ padding: '7px 10px' }}>—</td>
-                    </tr>
-                    <tr style={{ borderTop: '0.5px solid #eee' }}>
-                      <td style={{ padding: '7px 10px' }}>02:09:14</td>
-                      <td style={{ padding: '7px 10px' }}>ECOPS-PC-01</td>
-                      <td style={{ padding: '7px 10px' }}>GET /files/desktop</td>
-                      <td style={{ padding: '7px 10px' }}>—</td>
-                    </tr>
-                    <tr style={{ borderTop: '0.5px solid #eee', background: '#fff8e1' }}>
-                      <td style={{ padding: '7px 10px' }}>02:13:07</td>
-                      <td style={{ padding: '7px 10px' }}>ECOPS-PC-01</td>
-                      <td style={{ padding: '7px 10px' }}>GET /downloads/offer_location.jpg</td>
-                      <td style={{ padding: '7px 10px', color: '#b45309', fontWeight: 700 }}>8f14e45fceea167a5a36dedd4bea2543 ★</td>
-                    </tr>
-                    <tr style={{ borderTop: '0.5px solid #eee' }}>
-                      <td style={{ padding: '7px 10px' }}>02:13:41</td>
-                      <td style={{ padding: '7px 10px' }}>ECOPS-PC-01</td>
-                      <td style={{ padding: '7px 10px', color: '#c0392b' }}>DELETE /logs/access_history</td>
-                      <td style={{ padding: '7px 10px' }}>—</td>
-                    </tr>
-                  </tbody>
-                </table>
+                <span style={{ flex: 1 }}>president_0213.pcap</span>
+                <a
+                  href="/assets/president_0213.pcap"
+                  download="president_0213.pcap"
+                  style={{ fontSize: 11.5, color: '#0a84ff', fontWeight: 600, textDecoration: 'none' }}
+                >
+                  다운로드 ⬇
+                </a>
               </div>
             </div>
-            <div style={{ marginTop: 14, padding: '12px 14px', background: '#e7f0ff', border: '1px solid #b8d4ff', borderRadius: 10, fontSize: 12.5, color: '#1c4e8a', lineHeight: 1.6 }}>
-              새벽 2시 접근 + 직후 로그 삭제 시도. 접근한 파일 <b>offer_location.jpg</b> 과 해시 <b>8f14e45…2543</b> 를 확보했습니다.
-            </div>
-            <div style={{ marginTop: 16, textAlign: 'right' }}>
-              <button onClick={actions.toDownloads} style={{ padding: '10px 18px', border: 0, borderRadius: 9, background: '#0a84ff', color: '#fff', fontSize: 13, fontWeight: 600, cursor: 'pointer' }}>
-                다운로드 폴더 열기 →
-              </button>
+            <div style={{ marginTop: 16, fontSize: 12, color: '#8a8a8e', textAlign: 'right' }}>
+              복구가 끝났다면 Dock의 Maps 아이콘에서 계속하세요.
             </div>
           </div>
         )}

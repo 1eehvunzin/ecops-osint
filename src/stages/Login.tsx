@@ -14,7 +14,12 @@ export default function Login({ state, actions }: { state: AppState; actions: Ac
             </span>
           }
         />
-        <div style={{ padding: '34px 34px 30px', textAlign: 'center' }}>
+        <div style={{ padding: '18px 34px 0', textAlign: 'left' }}>
+          <button onClick={actions.toDesktop} style={{ border: 0, background: 'none', color: '#0a84ff', fontSize: 13, cursor: 'pointer', padding: 0 }}>
+            ← 뒤로
+          </button>
+        </div>
+        <div style={{ padding: '16px 34px 30px', textAlign: 'center' }}>
           <div style={{ fontSize: 20, fontWeight: 700, letterSpacing: 4, color: '#1c1c1e' }}>
             ECOPS WEBMAIL
           </div>
@@ -40,7 +45,6 @@ export default function Login({ state, actions }: { state: AppState; actions: Ac
           >
             LOGIN
           </button>
-          <div style={{ marginTop: 16, fontSize: 11.5, color: '#b0b0b6' }}>동아리메일_계정.txt 의 값을 디코딩해 로그인하세요</div>
         </div>
       </MacWindow>
     </div>
