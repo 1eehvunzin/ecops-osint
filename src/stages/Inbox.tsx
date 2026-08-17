@@ -173,6 +173,7 @@ export default function Inbox({ state, actions }: { state: AppState; actions: Ac
               <br />
               어젯밤 02시경 회장 PC에서 이상 트래픽이 확인돼 네트워크 캡처를 첨부합니다. 직접 분석해서 무슨 일이 있었는지 확인해 주세요.
             </p>
+            <div style={{ fontSize: 12, color: '#8a8a8e' }}>목표: 손상된 이미지 복원</div>
             <div style={{ marginTop: 16, border: '0.5px solid #d6d6d9', borderRadius: 10, overflow: 'hidden' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: 7, padding: '11px 14px', background: '#f4f4f6', fontSize: 12.5, color: '#3a3a3c' }}>
                 <IconPaperclip size={12} style={{ color: '#8a8a8e' }} />
