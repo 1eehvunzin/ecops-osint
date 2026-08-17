@@ -1,6 +1,6 @@
 import type { AppState, Actions } from '../types';
 import { MacWindow, TitleBar } from '../components/MacWindow';
-import { GlyphDoc, GlyphFolder, GlyphImage, GlyphMusicNote, IconWrench } from '../components/icons';
+import { GlyphDoc, GlyphFolder, GlyphImage, GlyphMusicNote } from '../components/icons';
 
 const icons = [
   { icon: <GlyphFolder />, label: '동아리 자료' },
@@ -39,48 +39,18 @@ export default function Desktop({ state, actions }: { state: AppState; actions: 
       {state.txtOpen && (
         <MacWindow width={520} draggable resizable="width" minWidth={400} defaultLeft="50%" defaultTop={70} centerX>
           <TitleBar title="동아리메일_계정.txt" onClose={actions.closeTxt} />
-            <div style={{ padding: '20px 22px', fontSize: 13, color: '#1c1c1e', lineHeight: 1.9 }}>
+            <div style={{ padding: '22px 22px 0' }}>
+              <button onClick={actions.closeTxt} style={{ border: 0, background: 'none', color: '#0a84ff', fontSize: 13, cursor: 'pointer', padding: 0 }}>
+                ← 뒤로
+              </button>
+            </div>
+            <div style={{ padding: '16px 22px 20px', fontSize: 13, color: '#1c1c1e', lineHeight: 1.9 }}>
               E-COPS 메일 계정
               <br />
               <br />
               ID (base64): <span style={{ background: '#fff3cd', padding: '1px 5px', borderRadius: 4 }}>ZWNvcHNtYWls</span>
               <br />
               PW (base64): <span style={{ background: '#fff3cd', padding: '1px 5px', borderRadius: 4 }}>cHdld2hhMTIzQA==</span>
-            </div>
-            <div style={{ margin: '0 22px 18px', padding: 14, background: '#f4f4f6', border: '0.5px solid #e0e0e3', borderRadius: 10 }}>
-              <div
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: 6,
-                  fontSize: 11,
-                  fontWeight: 700,
-                  letterSpacing: 0.5,
-                  color: '#8a8a8e',
-                  textTransform: 'uppercase',
-                  marginBottom: 8,
-                }}
-              >
-                <IconWrench size={11} />
-                Base64 Decoder
-              </div>
-              <input
-                value={state.b64in}
-                onChange={(e) => actions.onB64(e.target.value)}
-                placeholder="base64 문자열 붙여넣기…"
-                style={{
-                  width: '100%',
-                  height: 34,
-                  border: '0.5px solid #cdcdd0',
-                  borderRadius: 7,
-                  padding: '0 10px',
-                  fontSize: 13,
-                  outline: 0,
-                }}
-              />
-              <div style={{ marginTop: 9, minHeight: 20, fontSize: 13, color: '#1b6b3a' }}>
-                {decodeB64(state.b64in)}
-              </div>
             </div>
             <div style={{ padding: '0 22px 20px', textAlign: 'right' }}>
               <button
@@ -94,13 +64,4 @@ export default function Desktop({ state, actions }: { state: AppState; actions: 
       )}
     </div>
   );
-}
-
-function decodeB64(input: string): string {
-  if (!input.trim()) return '';
-  try {
-    return '→ ' + decodeURIComponent(escape(atob(input.trim())));
-  } catch {
-    return '→ (디코딩 불가)';
-  }
 }

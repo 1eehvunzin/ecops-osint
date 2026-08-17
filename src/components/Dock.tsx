@@ -1,4 +1,5 @@
 import type { CSSProperties, ReactNode } from 'react';
+import type { AppState, Actions } from '../types';
 import {
   GlyphFinderFace,
   GlyphMailEnvelope,
@@ -12,9 +13,35 @@ import {
 const dotStyle: CSSProperties = { width: 4, height: 4, borderRadius: '50%', background: 'rgba(255,255,255,0.92)' };
 const noDotStyle: CSSProperties = { width: 4, height: 4 };
 
-function Item({ bg, children, dot, label }: { bg: string; children: ReactNode; dot?: boolean; label: string }) {
+function Item({
+  bg,
+  children,
+  dot,
+  label,
+  onClick,
+  locked,
+}: {
+  bg: string;
+  children: ReactNode;
+  dot?: boolean;
+  label: string;
+  onClick?: () => void;
+  locked?: boolean;
+}) {
   return (
-    <div className="dock-item" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 4 }} title={label}>
+    <div
+      className="dock-item"
+      onClick={onClick}
+      style={{
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        gap: 4,
+        cursor: onClick ? (locked ? 'not-allowed' : 'pointer') : undefined,
+        opacity: locked ? 0.45 : 1,
+      }}
+      title={locked ? `${label} (잠김)` : label}
+    >
       <div style={{ position: 'relative', width: 52, height: 52 }}>
         <div
           style={{
@@ -54,7 +81,11 @@ function Item({ bg, children, dot, label }: { bg: string; children: ReactNode; d
   );
 }
 
-export default function Dock() {
+export default function Dock({ state, actions }: { state: AppState; actions: Actions }) {
+  const goToMail = () => (state.loggedIn ? actions.toInbox() : actions.toLogin());
+  const goToMaps = () => {
+    if (state.mapsUnlocked) actions.toOsint();
+  };
   return (
     <>
       <style>{`
@@ -80,7 +111,7 @@ export default function Dock() {
           boxShadow: '0 16px 46px rgba(0,0,0,0.45), inset 0 1px 0 rgba(255,255,255,0.35)',
         }}
       >
-        <Item bg="linear-gradient(180deg,#eef6ff,#dceeff)" dot label="Finder">
+        <Item bg="linear-gradient(180deg,#eef6ff,#dceeff)" dot label="Finder" onClick={actions.toDesktop}>
           <GlyphFinderFace size={34} />
         </Item>
 
@@ -112,10 +143,10 @@ export default function Dock() {
         <Item bg="linear-gradient(160deg,#6bf08a,#0fb64f)" dot label="Messages">
           <GlyphMessageBubble size={26} />
         </Item>
-        <Item bg="linear-gradient(160deg,#8fc7ff,#2a7de8)" label="Mail">
+        <Item bg="linear-gradient(160deg,#8fc7ff,#2a7de8)" label="Mail" onClick={goToMail}>
           <GlyphMailEnvelope size={27} />
         </Item>
-        <Item bg="linear-gradient(180deg,#fdfdfe,#eef1f5)" label="Maps">
+        <Item bg="linear-gradient(180deg,#fdfdfe,#eef1f5)" label="Maps" onClick={goToMaps} locked={!state.mapsUnlocked}>
           <GlyphMapPin size={36} />
         </Item>
 
