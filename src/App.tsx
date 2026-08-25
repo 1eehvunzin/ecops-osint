@@ -5,6 +5,7 @@ import { checkLogin, checkPlace } from './secret';
 import MenuBar from './components/MenuBar';
 import Dock from './components/Dock';
 import Wallpaper from './components/Wallpaper';
+import ChatHint from './components/ChatHint';
 import Opening from './stages/Opening';
 import Desktop from './stages/Desktop';
 import Login from './stages/Login';
@@ -65,9 +66,18 @@ function App() {
     openM1: () => set({ openMail: 'm1' }),
     openM2: () => set({ openMail: 'm2' }),
     openPcap: () => {
-      setState((s) => (s.pcapMailArrived ? { ...s, openMail: 'pcap', mapsUnlocked: true } : s));
+      setState((s) =>
+        s.pcapMailArrived
+          ? { ...s, openMail: 'pcap', mapsUnlocked: true, chatHint: s.chatHint === 'none' ? 'banner' : s.chatHint }
+          : s,
+      );
     },
     backInbox: () => set({ openMail: null }),
+
+    expandChatHint: () => set({ chatHint: 'open' }),
+    /** Dock의 메시지 아이콘 — 알림을 닫았어도 힌트를 다시 열 수 있게 한다. */
+    openChatHint: () => setState((s) => (s.mapsUnlocked ? { ...s, chatHint: 'open' } : s)),
+    closeChatHint: () => set({ chatHint: 'none' }),
     pickM1: (i) => {
       if (i === 1) set({ m1: true, m1bad: null });
       else set({ m1bad: i });
@@ -127,6 +137,8 @@ function App() {
       {state.stage === 'osint' && <Osint state={state} actions={actions} />}
 
       {showChrome && <Dock state={state} actions={actions} />}
+
+      <ChatHint state={state.chatHint} actions={actions} />
 
       {state.stage === 'ending' && <Ending actions={actions} />}
       {state.stage === 'result' && <Result actions={actions} />}

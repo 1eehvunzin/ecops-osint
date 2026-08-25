@@ -140,7 +140,12 @@ export default function Dock({ state, actions }: { state: AppState; actions: Act
         <Item bg="linear-gradient(180deg,#f4faff,#e2f1ff)" label="Safari">
           <GlyphSafariCompass size={38} />
         </Item>
-        <Item bg="linear-gradient(160deg,#6bf08a,#0fb64f)" dot label="Messages">
+        <Item
+          bg="linear-gradient(160deg,#6bf08a,#0fb64f)"
+          dot
+          label="Messages"
+          onClick={state.mapsUnlocked ? actions.openChatHint : undefined}
+        >
           <GlyphMessageBubble size={26} />
         </Item>
         <Item bg="linear-gradient(160deg,#8fc7ff,#2a7de8)" label="Mail" onClick={goToMail}>

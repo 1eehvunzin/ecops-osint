@@ -71,7 +71,7 @@ export default function Opening({ state, actions }: { state: AppState; actions: 
             <Bubble sender="부회장">
               아 그리고 계정 들어간 김에 밀린 것 좀 처리해줘.
               <br />
-              오늘 안 하면 진짜 큰일 나는 것들이야. 회장은 우리가 찾을게.
+              오늘 안 하면 진짜 큰일 나는 것들이야.
             </Bubble>
           )}
           {narr >= CHAT_MAX && (

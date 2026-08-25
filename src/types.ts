@@ -9,6 +9,9 @@ export type Stage =
 
 export type MailKey = 'm1' | 'm2' | 'pcap' | null;
 
+/** 단톡방 힌트 알림: 안 뜸 / 알림 배너 / 대화창 열림 */
+export type ChatHint = 'none' | 'banner' | 'open';
+
 export interface AppState {
   stage: Stage;
   narr: number;
@@ -19,6 +22,7 @@ export interface AppState {
   loggedIn: boolean;
   openMail: MailKey;
   pcapMailArrived: boolean;
+  chatHint: ChatHint;
   m1: boolean;
   m2: boolean;
   m1bad: number | null;
@@ -40,6 +44,7 @@ export const INITIAL_STATE: AppState = {
   loggedIn: false,
   openMail: null,
   pcapMailArrived: false,
+  chatHint: 'none',
   m1: false,
   m2: false,
   m1bad: null,
@@ -68,6 +73,9 @@ export interface Actions {
   openM2: () => void;
   openPcap: () => void;
   backInbox: () => void;
+  expandChatHint: () => void;
+  openChatHint: () => void;
+  closeChatHint: () => void;
   pickM1: (i: number) => void;
   pickM2: (i: number) => void;
   toOsint: () => void;
