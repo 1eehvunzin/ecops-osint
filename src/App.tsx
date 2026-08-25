@@ -48,6 +48,14 @@ function App() {
 
     openTxt: () => set({ txtOpen: true }),
     closeTxt: () => set({ txtOpen: false }),
+
+    openDeskMenu: (x, y) => set({ deskMenu: { x, y }, deskMenuView: false }),
+    closeDeskMenu: () => set({ deskMenu: null, deskMenuView: false }),
+    hoverDeskMenuView: (open) => set({ deskMenuView: open }),
+    toggleHidden: () => setState((s) => ({ ...s, showHidden: !s.showHidden, deskMenu: null, deskMenuView: false })),
+    openHiddenFile: (f) =>
+      setState((s) => ({ ...s, openHidden: f, foundEggs: s.foundEggs.includes(f) ? s.foundEggs : [...s.foundEggs, f] })),
+    closeHiddenFile: () => set({ openHidden: null }),
     toLogin: () => set({ stage: 'login' }),
     toInbox: () => set({ stage: 'inbox' }),
 
@@ -114,6 +122,18 @@ function App() {
     const id = window.setTimeout(() => set({ chatHint: 'banner', chatHintShown: true }), 3000);
     return () => window.clearTimeout(id);
   }, [state.openMail, state.chatHintShown]);
+
+  useEffect(() => {
+    if (state.stage !== 'desktop') return;
+    const onKey = (e: KeyboardEvent) => {
+      if ((e.metaKey || e.ctrlKey) && e.shiftKey && (e.key === '.' || e.code === 'Period')) {
+        e.preventDefault();
+        actions.toggleHidden();
+      }
+    };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  });
 
   const showChrome = CHROME_STAGES.includes(state.stage);
 
