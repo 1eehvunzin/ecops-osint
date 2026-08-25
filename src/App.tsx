@@ -1,6 +1,7 @@
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import type { Actions, AppState, Stage } from './types';
-import { INITIAL_STATE } from './types';
+import { CHAT_MAX, INITIAL_STATE } from './types';
+import { checkLogin, checkPlace } from './secret';
 import MenuBar from './components/MenuBar';
 import Dock from './components/Dock';
 import Wallpaper from './components/Wallpaper';
@@ -11,8 +12,6 @@ import Inbox from './stages/Inbox';
 import Osint from './stages/Osint';
 import Ending from './stages/Ending';
 import Result from './stages/Result';
-
-const CHAT_MAX = 4;
 
 const APP_NAME: Record<Stage, string> = {
   opening: 'Messages',
@@ -58,9 +57,7 @@ function App() {
     },
     doLogin: () => {
       setState((s) => {
-        const id = (s.loginId || '').trim().toLowerCase().replace('@ecops.club', '');
-        const pw = (s.loginPw || '').trim();
-        if (id === 'ecopsmail' && pw === 'pwewha123@') return { ...s, stage: 'inbox', loginErr: '', loggedIn: true };
+        if (checkLogin(s.loginId, s.loginPw)) return { ...s, stage: 'inbox', loginErr: '', loggedIn: true };
         return { ...s, loginErr: '아이디 또는 비밀번호가 올바르지 않습니다.' };
       });
     },
@@ -68,7 +65,7 @@ function App() {
     openM1: () => set({ openMail: 'm1' }),
     openM2: () => set({ openMail: 'm2' }),
     openPcap: () => {
-      setState((s) => (s.m1 && s.m2 ? { ...s, openMail: 'pcap', mapsUnlocked: true } : s));
+      setState((s) => (s.pcapMailArrived ? { ...s, openMail: 'pcap', mapsUnlocked: true } : s));
     },
     backInbox: () => set({ openMail: null }),
     pickM1: (i) => {
@@ -86,10 +83,7 @@ function App() {
       if (key === 'Enter') actions.submitQuery();
     },
     submitQuery: () => {
-      const q = (state.query || '').toLowerCase().replace(/\s|·/g, '');
-      const keywords = ['아산공학관', '아산공학', 'asan', 'asanengineering', 'asanhall', '아산관'];
-      const ok = keywords.some((k) => q.includes(k.toLowerCase().replace(/\s/g, '')));
-      if (ok) {
+      if (checkPlace(state.query)) {
         set({ status: 'correct', solved: true });
         if (timeoutRef.current) window.clearTimeout(timeoutRef.current);
         timeoutRef.current = window.setTimeout(() => set({ stage: 'ending' }), 1400);
@@ -101,6 +95,12 @@ function App() {
     openResult: () => set({ stage: 'result' }),
     restart: () => setState(INITIAL_STATE),
   };
+
+  useEffect(() => {
+    if (!state.m1 || !state.m2 || state.pcapMailArrived) return;
+    const id = window.setTimeout(() => set({ pcapMailArrived: true }), 1600);
+    return () => window.clearTimeout(id);
+  }, [state.m1, state.m2, state.pcapMailArrived]);
 
   const showChrome = CHROME_STAGES.includes(state.stage);
 

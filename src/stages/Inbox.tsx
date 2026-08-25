@@ -1,7 +1,7 @@
 import type { CSSProperties } from 'react';
 import type { AppState, Actions } from '../types';
 import { MacWindow, TitleBar } from '../components/MacWindow';
-import { IconLock, IconPaperclip, IconPin } from '../components/icons';
+import { IconPaperclip } from '../components/icons';
 
 function optStyle(kind: 'idle' | 'ok' | 'bad'): CSSProperties {
   const base: CSSProperties = {
@@ -20,7 +20,7 @@ function optStyle(kind: 'idle' | 'ok' | 'bad'): CSSProperties {
 }
 
 export default function Inbox({ state, actions }: { state: AppState; actions: Actions }) {
-  const unlocked = state.m1 && state.m2;
+  const arrived = state.pcapMailArrived;
 
   return (
     <div style={{ position: 'relative', zIndex: 10, minHeight: 'calc(100vh - 28px)', display: 'flex', justifyContent: 'center', padding: '34px 24px 120px' }}>
@@ -29,21 +29,24 @@ export default function Inbox({ state, actions }: { state: AppState; actions: Ac
 
         {state.openMail === null && (
           <div>
-            <div
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: 10,
-                padding: '11px 18px',
-                background: unlocked ? '#e8f7ee' : '#fff8e1',
-                borderBottom: '0.5px solid #eee',
-                fontSize: 12.5,
-                color: unlocked ? '#1b6b3a' : '#7a5b00',
-              }}
-            >
-              <IconPin size={12} style={{ color: unlocked ? '#1b6b3a' : '#c88a00' }} />
-              <span>{unlocked ? '모든 메일이 표시됩니다.' : '우선순위 정리함 작동 중 — 안읽음 긴급 메일 2건을 처리해야 이전 메일함이 표시됩니다.'}</span>
-            </div>
+            {arrived && (
+              <div
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: 9,
+                  padding: '11px 18px',
+                  background: '#e8f7ee',
+                  borderBottom: '0.5px solid #eee',
+                  fontSize: 12.5,
+                  color: '#1b6b3a',
+                  animation: 'bubbleIn .3s ease both',
+                }}
+              >
+                <span style={{ width: 7, height: 7, borderRadius: '50%', background: '#28a745', flex: 'none' }} />
+                <span>새 메일이 도착했습니다.</span>
+              </div>
+            )}
 
             <div onClick={actions.openM1} style={{ display: 'flex', alignItems: 'center', gap: 14, padding: '15px 18px', borderBottom: '0.5px solid #f0f0f2', cursor: 'pointer' }}>
               <span style={{ fontSize: 11, fontWeight: 700, color: '#fff', background: '#ff9500', padding: '3px 8px', borderRadius: 6 }}>신규</span>
@@ -63,17 +66,18 @@ export default function Inbox({ state, actions }: { state: AppState; actions: Ac
               <span style={{ fontSize: 13, color: state.m2 ? '#28a745' : '#ff9500', fontWeight: 600 }}>{state.m2 ? '완료 ✓' : '미처리'}</span>
             </div>
 
-            <div
-              onClick={actions.openPcap}
-              style={{ display: 'flex', alignItems: 'center', gap: 14, padding: '15px 18px', borderBottom: '0.5px solid #f0f0f2', cursor: unlocked ? 'pointer' : 'not-allowed', opacity: unlocked ? 1 : 0.45 }}
-            >
-              <span style={{ fontSize: 11, fontWeight: 700, color: '#fff', background: '#8e8e93', padding: '3px 8px', borderRadius: 6 }}>긴급</span>
-              <div style={{ flex: 1 }}>
-                <div style={{ fontSize: 14, fontWeight: 600, color: '#1c1c1e' }}>네트워크 이상 기록 확인 바람</div>
-                <div style={{ fontSize: 12, color: '#8a8a8e' }}>관리팀 · 첨부: president_0213.pcap</div>
+            {arrived && (
+              <div
+                onClick={actions.openPcap}
+                style={{ display: 'flex', alignItems: 'center', gap: 14, padding: '15px 18px', borderBottom: '0.5px solid #f0f0f2', cursor: 'pointer', animation: 'bubbleIn .3s ease both' }}
+              >
+                <span style={{ fontSize: 11, fontWeight: 700, color: '#fff', background: '#ff3b30', padding: '3px 8px', borderRadius: 6 }}>자동탐지</span>
+                <div style={{ flex: 1 }}>
+                  <div style={{ fontSize: 14, fontWeight: 600, color: '#1c1c1e' }}>[자동탐지] 비정상 시간대 트래픽 — 확인 바람</div>
+                  <div style={{ fontSize: 12, color: '#8a8a8e' }}>관리팀 · 첨부: president_0213.pcap</div>
+                </div>
               </div>
-              <span style={{ color: '#8a8a8e' }}>{!unlocked && <IconLock size={12} />}</span>
-            </div>
+            )}
 
             <div style={{ padding: '14px 18px', borderBottom: '0.5px solid #f5f5f6', opacity: 0.5, fontSize: 13, color: '#8a8a8e' }}>
               [뉴스레터] 이번 주 보안 동향 요약
@@ -166,14 +170,47 @@ export default function Inbox({ state, actions }: { state: AppState; actions: Ac
             <button onClick={actions.backInbox} style={{ border: 0, background: 'none', color: '#0a84ff', fontSize: 13, cursor: 'pointer', padding: 0, marginBottom: 16 }}>
               ← Inbox
             </button>
-            <div style={{ fontSize: 17, fontWeight: 700, color: '#1c1c1e' }}>네트워크 이상 기록 확인 바람</div>
-            <div style={{ fontSize: 12, color: '#8a8a8e', margin: '4px 0 16px' }}>from 관리팀 · 첨부: president_0213.pcap</div>
+            <div style={{ fontSize: 17, fontWeight: 700, color: '#1c1c1e' }}>[자동탐지] 비정상 시간대 트래픽 — 확인 바람</div>
+            <div style={{ fontSize: 12, color: '#8a8a8e', margin: '4px 0 16px' }}>
+              from 관리팀 &lt;admin@ecops.club&gt; · 첨부: president_0213.pcap
+            </div>
             <p style={{ fontSize: 14, lineHeight: 1.7, color: '#2c2c2e' }}>
               회장님,
               <br />
-              어젯밤 02시경 회장 PC에서 이상 트래픽이 확인돼 네트워크 캡처를 첨부합니다. 직접 분석해서 무슨 일이 있었는지 확인해 주세요.
+              어젯밤 02시경 회장 PC에서 이상 트래픽이 탐지되어 해당 세션 전체를 캡처해 첨부합니다.
+              <br />
+              <br />
+              캡처 안에서 이미지 파일이 하나 오간 게 확인되는데 저희 쪽 도구로는 열리지 않습니다. 자동 분석 결과는 아래와 같습니다.
             </p>
-            <div style={{ fontSize: 12, color: '#8a8a8e' }}>목표: 손상된 이미지 복원</div>
+            <div
+              style={{
+                marginTop: 14,
+                background: '#f4f4f6',
+                border: '0.5px solid #e0e0e3',
+                borderRadius: 10,
+                padding: '13px 16px',
+                fontFamily: "ui-monospace,SFMono-Regular,Menlo,monospace",
+                fontSize: 12,
+                color: '#1c1c1e',
+                lineHeight: 2,
+              }}
+            >
+              추출 파일&nbsp;&nbsp; 1건
+              <br />
+              크기&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 746,846 bytes
+              <br />
+              형식 판별&nbsp;&nbsp; <span style={{ color: '#c0392b' }}>실패 — 파일 시그니처 손상 (선두 4바이트)</span>
+              <br />
+              미리보기&nbsp;&nbsp;&nbsp; 생성 불가
+              <div style={{ marginTop: 8, paddingTop: 8, borderTop: '0.5px solid #dcdce0', color: '#6a6a70' }}>
+                ※ 본문 데이터는 온전합니다. 헤더 복구 후 재시도하십시오.
+              </div>
+            </div>
+            <p style={{ fontSize: 14, lineHeight: 1.7, color: '#2c2c2e', marginTop: 16 }}>
+              파일 자체는 멀쩡한 것 같으니 직접 확인해 보시겠어요?
+              <br />
+              저희가 임의로 손대는 건 아닐 것 같아서요.
+            </p>
             <div style={{ marginTop: 16, border: '0.5px solid #d6d6d9', borderRadius: 10, overflow: 'hidden' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: 7, padding: '11px 14px', background: '#f4f4f6', fontSize: 12.5, color: '#3a3a3c' }}>
                 <IconPaperclip size={12} style={{ color: '#8a8a8e' }} />
@@ -186,6 +223,45 @@ export default function Inbox({ state, actions }: { state: AppState; actions: Ac
                   다운로드 ⬇
                 </a>
               </div>
+            </div>
+            <div
+              style={{
+                marginTop: 20,
+                background: '#f2f2f7',
+                border: '0.5px solid #e0e0e3',
+                borderRadius: 12,
+                padding: '14px 16px',
+                display: 'flex',
+                flexDirection: 'column',
+                gap: 8,
+              }}
+            >
+              <div style={{ fontSize: 10.5, color: '#8a8a8e', letterSpacing: 0.4 }}>E-COPS 단체방</div>
+              {[
+                ['부원1', '야 이거 어디서 본 것 같은데'],
+                ['부원1', '우리 E-COPS 처음 들어와서 비기너였을 때 포렌식 실습했었잖아'],
+                ['부원2', '기억안나는데'],
+                ['부원1', '세션 내용 인스타에 정리해서 올렸을걸?'],
+                ['부원1', '15기 3주차 정규세션 게시물 6페이지.'],
+                ['부원2', '?왜이렇게 구체적으로 알아'],
+              ].map(([who, msg], i) => (
+                <div key={i} style={{ display: 'flex', gap: 8, alignItems: 'flex-start' }}>
+                  <span style={{ fontSize: 10.5, color: '#8a8a8e', width: 34, flex: 'none', paddingTop: 3 }}>{who}</span>
+                  <span
+                    style={{
+                      background: '#fff',
+                      borderRadius: 12,
+                      padding: '7px 11px',
+                      fontSize: 12.5,
+                      lineHeight: 1.5,
+                      color: '#1c1c1e',
+                      boxShadow: '0 1px 1px rgba(0,0,0,0.05)',
+                    }}
+                  >
+                    {msg}
+                  </span>
+                </div>
+              ))}
             </div>
             <div style={{ marginTop: 16, fontSize: 12, color: '#8a8a8e', textAlign: 'right' }}>
               복구가 끝났다면 Dock의 Maps 아이콘에서 계속하세요.

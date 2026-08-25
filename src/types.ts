@@ -18,6 +18,7 @@ export interface AppState {
   loginErr: string;
   loggedIn: boolean;
   openMail: MailKey;
+  pcapMailArrived: boolean;
   m1: boolean;
   m2: boolean;
   m1bad: number | null;
@@ -38,6 +39,7 @@ export const INITIAL_STATE: AppState = {
   loginErr: '',
   loggedIn: false,
   openMail: null,
+  pcapMailArrived: false,
   m1: false,
   m2: false,
   m1bad: null,
@@ -49,7 +51,7 @@ export const INITIAL_STATE: AppState = {
   solved: false,
 };
 
-export const CHAT_MAX = 4;
+export const CHAT_MAX = 5;
 
 export interface Actions {
   nextNarr: () => void;

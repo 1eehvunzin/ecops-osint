@@ -1,6 +1,7 @@
 import type { Actions } from '../types';
 import { MacWindow, TitleBar } from '../components/MacWindow';
 import { IconPerson } from '../components/icons';
+import { PLACE_ROOM, reveal } from '../secret';
 
 export default function Ending({ actions }: { actions: Actions }) {
   return (
@@ -9,7 +10,7 @@ export default function Ending({ actions }: { actions: Actions }) {
         <TitleBar title="FaceTime — Incoming call" dark height={40} />
         <div style={{ position: 'relative', height: 380, background: 'repeating-linear-gradient(45deg,#262629 0 12px,#2b2b2f 12px 24px)' }}>
           <div style={{ position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 14, color: '#8e8e93' }}>
-            <div style={{ fontSize: 13, letterSpacing: 1 }}>[ VIDEO — 아산공학관 109호, empty lecture room ]</div>
+            <div style={{ fontSize: 13, letterSpacing: 1 }}>{`[ VIDEO — ${reveal(PLACE_ROOM)} ]`}</div>
             <div style={{ width: 96, height: 96, borderRadius: '50%', background: '#3a3a3c', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
               <IconPerson size={46} style={{ color: '#6e6e76' }} />
             </div>
@@ -18,9 +19,12 @@ export default function Ending({ actions }: { actions: Actions }) {
           <div style={{ position: 'absolute', left: 0, right: 0, bottom: 0, padding: '22px 26px', background: 'linear-gradient(transparent,rgba(0,0,0,0.85))', color: '#f2f2f2', fontSize: 15.5, lineHeight: 1.7 }}>
             "얘들아… 미안, 나 여기 있어."
             <br />
-            "어제 새벽에 스카우트 제안 메일을 받았는데, 만나자는 장소가 여기였어."
+            "다음 기수 포렌식 실습 자료 만들고 있었어. 문제로 낼 사진이 필요해서 여기서 찍었거든."
             <br />
-            "미리 와서 발표 대본 외우다가… 며칠 밤새서 그냥 잠들어버렸다."
+            "그거 새벽까지 붙잡고 있다가… 며칠 밤새서 그냥 잠들어버렸다."
+            <br />
+            <br />
+            "…잠깐. 그거 아직 아무한테도 안 줬는데, 너네 그걸 어떻게 풀었어?"
           </div>
         </div>
         <div style={{ padding: 16, background: '#2c2c2e', display: 'flex', justifyContent: 'center' }}>

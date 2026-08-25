@@ -1,11 +1,12 @@
 import type { AppState, Actions } from '../types';
 import { MacWindow, TitleBar, SearchField } from '../components/MacWindow';
 import { IconCheckCircle, IconXCircle } from '../components/icons';
+import { PLACE_FOUND, PLACE_LABEL, reveal } from '../secret';
 
 export default function Osint({ state, actions }: { state: AppState; actions: Actions }) {
   const statusMap = {
     wrong: { msg: '일치하는 위치가 없습니다. 다시 확인해 보세요.', bg: '#fdecea', bd: '#f5b7b1', fg: '#a11', Icon: IconXCircle },
-    correct: { msg: '위치 확인 — 아산공학관. 연결 중…', bg: '#d8f3dc', bd: '#95d5b2', fg: '#1b6b3a', Icon: IconCheckCircle },
+    correct: { msg: reveal(PLACE_FOUND), bg: '#d8f3dc', bd: '#95d5b2', fg: '#1b6b3a', Icon: IconCheckCircle },
   } as const;
   const st = state.status ? statusMap[state.status] : null;
 
@@ -66,7 +67,7 @@ export default function Osint({ state, actions }: { state: AppState; actions: Ac
             <div style={{ position: 'absolute', left: '50%', top: '44%', transform: 'translate(-50%,-100%)', display: 'flex', flexDirection: 'column', alignItems: 'center', zIndex: 2 }}>
               <div style={{ width: 26, height: 26, borderRadius: '50% 50% 50% 0', transform: 'rotate(-45deg)', background: '#ff453a', boxShadow: '0 6px 14px rgba(0,0,0,0.3)', border: '2px solid #fff' }} />
               <div style={{ marginTop: 12, background: '#fff', padding: '8px 12px', borderRadius: 8, boxShadow: '0 4px 14px rgba(0,0,0,0.18)', textAlign: 'center' }}>
-                <div style={{ fontSize: 13, fontWeight: 700, color: '#1c1c1e' }}>아산공학관 · Asan Engineering</div>
+                <div style={{ fontSize: 13, fontWeight: 700, color: '#1c1c1e' }}>{reveal(PLACE_LABEL)}</div>
                 <div style={{ fontSize: 11, color: '#8a8a8e', marginTop: 2 }}>이화여자대학교 · Seoul</div>
               </div>
             </div>
