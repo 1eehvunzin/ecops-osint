@@ -1,15 +1,16 @@
-import type { Actions, ChatHint as ChatHintState } from '../types';
+import type { AppState, Actions } from '../types';
+import { HINT_MAX } from '../types';
 import { MacWindow, TitleBar } from './MacWindow';
 import { GlyphMessageBubble } from './icons';
 
-/** 힌트 대화. 진행에 꼭 필요한 내용이라 놓치지 않도록 알림으로 띄운다. */
-const LINES: [string, string][] = [
-  ['부원1', '야 이거 어디서 본 것 같은데'],
-  ['부원1', '우리 E-COPS 처음 들어와서 비기너였을 때 포렌식 실습했었잖아'],
-  ['부원2', '기억안나는데'],
-  ['부원1', '세션 내용 인스타에 정리해서 올렸을걸?'],
-  ['부원1', '15기 3주차 정규세션 게시물 6페이지.'],
-  ['부원2', '?왜이렇게 구체적으로 알아'],
+/** 힌트 대화. 진행에 꼭 필요한 내용이라 알림으로 띄우고, 직접 답장하며 읽게 한다. */
+const LINES: { who?: string; text: string; self?: boolean }[] = [
+  { who: '부원1', text: '야 이거 어디서 본 것 같은데' },
+  { who: '부원1', text: '우리 E-COPS 처음 들어와서 비기너였을 때 포렌식 실습했었잖아' },
+  { self: true, text: '음 기억이 잘 안 나는데…' },
+  { who: '부원1', text: '세션 내용 인스타에 정리해서 올렸을걸?' },
+  { who: '부원1', text: '15기 3주차 정규세션 게시물 6페이지.' },
+  { self: true, text: '?왜이렇게 구체적으로 알아' },
 ];
 
 function AppIcon({ size = 38 }: { size?: number }) {
@@ -32,10 +33,31 @@ function AppIcon({ size = 38 }: { size?: number }) {
   );
 }
 
-export default function ChatHint({ state, actions }: { state: ChatHintState; actions: Actions }) {
-  if (state === 'none') return null;
+function Bubble({ who, text, self }: { who?: string; text: string; self?: boolean }) {
+  return (
+    <div style={{ alignSelf: self ? 'flex-end' : 'flex-start', maxWidth: '86%', animation: 'bubbleIn .28s ease both' }}>
+      {who && <div style={{ fontSize: 10.5, color: '#8a8a8e', margin: '0 0 3px 8px' }}>{who}</div>}
+      <div
+        style={{
+          background: self ? '#0a84ff' : '#fff',
+          color: self ? '#fff' : '#1c1c1e',
+          borderRadius: 14,
+          padding: '9px 13px',
+          fontSize: 13.5,
+          lineHeight: 1.5,
+          boxShadow: self ? undefined : '0 1px 1px rgba(0,0,0,0.05)',
+        }}
+      >
+        {text}
+      </div>
+    </div>
+  );
+}
 
-  if (state === 'banner') {
+export default function ChatHint({ state, actions }: { state: AppState; actions: Actions }) {
+  if (state.chatHint === 'none') return null;
+
+  if (state.chatHint === 'banner') {
     return (
       <div
         onClick={actions.expandChatHint}
@@ -77,7 +99,7 @@ export default function ChatHint({ state, actions }: { state: ChatHintState; act
               whiteSpace: 'nowrap',
             }}
           >
-            부원1: 야 이거 어디서 본 것 같은데
+            부원1: {LINES[0].text}
           </div>
           <div style={{ fontSize: 11, color: '#0a84ff', marginTop: 6, fontWeight: 600 }}>클릭해서 대화 보기</div>
         </div>
@@ -85,71 +107,100 @@ export default function ChatHint({ state, actions }: { state: ChatHintState; act
     );
   }
 
+  const shown = LINES.slice(0, state.hintStep);
+  const done = state.hintStep >= HINT_MAX;
+
   return (
-    <div
-      style={{
-        position: 'fixed',
-        inset: 0,
-        zIndex: 70,
-        background: 'rgba(0,0,0,0.32)',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        padding: 24,
-        animation: 'notifIn .22s ease both',
-      }}
-    >
-      <MacWindow width={440} radius={16}>
+    /* 진짜 창처럼 자유롭게 옮길 수 있도록, 배경은 클릭을 통과시킨다. */
+    <div style={{ position: 'fixed', inset: 0, zIndex: 70, pointerEvents: 'none' }}>
+      <MacWindow
+        width={430}
+        radius={16}
+        draggable
+        resizable="width"
+        minWidth={340}
+        defaultLeft="50%"
+        defaultTop={96}
+        centerX
+        style={{ pointerEvents: 'auto', animation: 'notifIn .24s ease both' }}
+      >
         <TitleBar title="E-COPS 단체방" height={52} onClose={actions.closeChatHint} />
         <div
           style={{
             padding: 18,
             display: 'flex',
             flexDirection: 'column',
-            gap: 10,
+            gap: 11,
             background: '#f2f2f7',
-            maxHeight: '58vh',
+            minHeight: 'min(260px,38vh)',
+            maxHeight: '48vh',
             overflowY: 'auto',
           }}
         >
-          {LINES.map(([who, msg], i) => (
-            <div key={i} style={{ alignSelf: 'flex-start', maxWidth: '88%', animation: 'bubbleIn .28s ease both' }}>
-              {LINES[i - 1]?.[0] !== who && (
-                <div style={{ fontSize: 10.5, color: '#8a8a8e', margin: '0 0 3px 8px' }}>{who}</div>
-              )}
-              <div
-                style={{
-                  background: '#fff',
-                  color: '#1c1c1e',
-                  borderRadius: 14,
-                  padding: '9px 13px',
-                  fontSize: 13.5,
-                  lineHeight: 1.5,
-                  boxShadow: '0 1px 1px rgba(0,0,0,0.05)',
-                }}
-              >
-                {msg}
-              </div>
-            </div>
+          {shown.map((l, i) => (
+            <Bubble key={i} who={shown[i - 1]?.who !== l.who ? l.who : undefined} text={l.text} self={l.self} />
           ))}
         </div>
-        <div style={{ padding: 14, background: '#fff', borderTop: '0.5px solid #eee', display: 'flex', justifyContent: 'center' }}>
-          <button
-            onClick={actions.closeChatHint}
-            style={{
-              padding: '10px 26px',
-              border: 0,
-              borderRadius: 10,
-              background: '#0a84ff',
-              color: '#fff',
-              fontSize: 14,
-              fontWeight: 600,
-              cursor: 'pointer',
-            }}
-          >
-            확인
-          </button>
-        </div>
+
+        {!done && (
+          <div style={{ padding: '9px 11px', background: '#fff', borderTop: '0.5px solid #eee', display: 'flex', alignItems: 'center', gap: 9 }}>
+            <div
+              style={{
+                flex: 1,
+                height: 36,
+                border: '1px solid #d6d6d9',
+                borderRadius: 18,
+                display: 'flex',
+                alignItems: 'center',
+                padding: '0 15px',
+                color: '#b0b0b6',
+                fontSize: 13.5,
+              }}
+            >
+              iMessage
+            </div>
+            <button
+              onClick={actions.nextHint}
+              aria-label="보내기"
+              style={{
+                width: 36,
+                height: 36,
+                border: 0,
+                borderRadius: '50%',
+                background: '#0a84ff',
+                color: '#fff',
+                fontSize: 18,
+                fontWeight: 700,
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                animation: 'sendPulse 1.15s ease-in-out infinite',
+              }}
+            >
+              ↑
+            </button>
+          </div>
+        )}
+        {done && (
+          <div style={{ padding: 14, background: '#fff', borderTop: '0.5px solid #eee', display: 'flex', justifyContent: 'center' }}>
+            <button
+              onClick={actions.closeChatHint}
+              style={{
+                padding: '10px 26px',
+                border: 0,
+                borderRadius: 10,
+                background: '#0a84ff',
+                color: '#fff',
+                fontSize: 14,
+                fontWeight: 600,
+                cursor: 'pointer',
+              }}
+            >
+              확인
+            </button>
+          </div>
+        )}
       </MacWindow>
     </div>
   );

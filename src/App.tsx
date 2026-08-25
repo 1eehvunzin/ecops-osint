@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import type { Actions, AppState, Stage } from './types';
-import { CHAT_MAX, INITIAL_STATE } from './types';
+import { CHAT_MAX, HINT_MAX, INITIAL_STATE } from './types';
 import { checkLogin, checkPlace } from './secret';
 import MenuBar from './components/MenuBar';
 import Dock from './components/Dock';
@@ -66,15 +66,12 @@ function App() {
     openM1: () => set({ openMail: 'm1' }),
     openM2: () => set({ openMail: 'm2' }),
     openPcap: () => {
-      setState((s) =>
-        s.pcapMailArrived
-          ? { ...s, openMail: 'pcap', mapsUnlocked: true, chatHint: s.chatHint === 'none' ? 'banner' : s.chatHint }
-          : s,
-      );
+      setState((s) => (s.pcapMailArrived ? { ...s, openMail: 'pcap', mapsUnlocked: true } : s));
     },
     backInbox: () => set({ openMail: null }),
 
     expandChatHint: () => set({ chatHint: 'open' }),
+    nextHint: () => setState((s) => ({ ...s, hintStep: Math.min(s.hintStep + 1, HINT_MAX) })),
     /** Dock의 메시지 아이콘 — 알림을 닫았어도 힌트를 다시 열 수 있게 한다. */
     openChatHint: () => setState((s) => (s.mapsUnlocked ? { ...s, chatHint: 'open' } : s)),
     closeChatHint: () => set({ chatHint: 'none' }),
@@ -112,6 +109,12 @@ function App() {
     return () => window.clearTimeout(id);
   }, [state.m1, state.m2, state.pcapMailArrived]);
 
+  useEffect(() => {
+    if (state.openMail !== 'pcap' || state.chatHintShown) return;
+    const id = window.setTimeout(() => set({ chatHint: 'banner', chatHintShown: true }), 3000);
+    return () => window.clearTimeout(id);
+  }, [state.openMail, state.chatHintShown]);
+
   const showChrome = CHROME_STAGES.includes(state.stage);
 
   return (
@@ -138,7 +141,7 @@ function App() {
 
       {showChrome && <Dock state={state} actions={actions} />}
 
-      <ChatHint state={state.chatHint} actions={actions} />
+      <ChatHint state={state} actions={actions} />
 
       {state.stage === 'ending' && <Ending actions={actions} />}
       {state.stage === 'result' && <Result actions={actions} />}

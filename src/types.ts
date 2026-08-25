@@ -23,6 +23,10 @@ export interface AppState {
   openMail: MailKey;
   pcapMailArrived: boolean;
   chatHint: ChatHint;
+  /** 알림을 한 번이라도 띄웠는지 — 닫은 뒤 다시 자동으로 뜨지 않게 한다. */
+  chatHintShown: boolean;
+  /** 힌트 대화에서 지금까지 보인 말풍선 개수 */
+  hintStep: number;
   m1: boolean;
   m2: boolean;
   m1bad: number | null;
@@ -45,6 +49,8 @@ export const INITIAL_STATE: AppState = {
   openMail: null,
   pcapMailArrived: false,
   chatHint: 'none',
+  chatHintShown: false,
+  hintStep: 1,
   m1: false,
   m2: false,
   m1bad: null,
@@ -57,6 +63,9 @@ export const INITIAL_STATE: AppState = {
 };
 
 export const CHAT_MAX = 5;
+
+/** 힌트 대화 말풍선 총 개수 */
+export const HINT_MAX = 6;
 
 export interface Actions {
   nextNarr: () => void;
@@ -74,6 +83,7 @@ export interface Actions {
   openPcap: () => void;
   backInbox: () => void;
   expandChatHint: () => void;
+  nextHint: () => void;
   openChatHint: () => void;
   closeChatHint: () => void;
   pickM1: (i: number) => void;
