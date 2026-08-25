@@ -17,11 +17,11 @@ export default function Ending({ actions }: { actions: Actions }) {
             <div style={{ color: '#fff', fontFamily: '-apple-system,sans-serif', fontSize: 16, fontWeight: 600 }}>회장 · President</div>
           </div>
           <div style={{ flex: 'none', padding: '20px 26px 24px', background: 'linear-gradient(transparent,rgba(0,0,0,0.85))', color: '#f2f2f2', fontSize: 15.5, lineHeight: 1.75 }}>
-            "얘들아… 미안, 나 여기 있어."
+            "미안… 나 여기 있어."
             <br />
             "다음 기수 포렌식 실습 자료 만들고 있었어. 문제로 낼 사진이 필요해서 여기서 찍었거든."
             <br />
-            "그거 새벽까지 붙잡고 있다가… 며칠 밤새서 그냥 잠들어버렸다."
+            "만들다가 그대로 잠들었나 봐."
           </div>
         </div>
         <div style={{ padding: 16, background: '#2c2c2e', display: 'flex', justifyContent: 'center' }}>
