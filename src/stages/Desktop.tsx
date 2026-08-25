@@ -15,7 +15,7 @@ const icons = [
 const hidden: { key: HiddenFile; label: string; icon: React.ReactNode }[] = [
   { key: 'logo', label: '.ecops_logo.png', icon: <GlyphImage /> },
   { key: 'emblem', label: '.ecops_emblem.png', icon: <GlyphImage /> },
-  { key: 'notice', label: '.모집공고.txt', icon: <GlyphDoc /> },
+  { key: 'notice', label: '.모집공고_26-1.txt', icon: <GlyphDoc /> },
 ];
 
 const RECRUIT_URL = 'https://ecops17th-ewha.notion.site/E-COPS-17th-Recruiting-30112f43f60480f2b08dfc1f53460f7f';
@@ -135,17 +135,14 @@ function HiddenViewer({ state, actions }: { state: AppState; actions: Actions })
         <TitleBar title={meta.label} onClose={actions.closeHiddenFile} />
         <div style={{ padding: '22px 24px 24px', fontSize: 13.5, color: '#1c1c1e', lineHeight: 1.9 }}>
           <div style={{ fontSize: 15, fontWeight: 700, marginBottom: 10 }}>E-COPS 17th Recruiting</div>
-          이화여자대학교 정보보안 동아리 E-COPS가
+          이화여자대학교 정보보안 동아리 E-COPS
           <br />
-          17기 신입 부원을 모집합니다.
+          2026학년도 1학기 신입 부원 모집 공고
           <div style={{ marginTop: 16, padding: '12px 14px', background: '#f4f4f6', border: '0.5px solid #e0e0e3', borderRadius: 9 }}>
             <div style={{ fontSize: 11, color: '#8a8a8e', marginBottom: 5 }}>모집 공고</div>
             <a href={RECRUIT_URL} target="_blank" rel="noreferrer" style={{ fontSize: 12.5, wordBreak: 'break-all' }}>
               {RECRUIT_URL}
             </a>
-          </div>
-          <div style={{ marginTop: 14, fontSize: 12, color: '#8a8a8e' }}>
-            …회장님, 이런 건 숨김 파일로 두지 마세요.
           </div>
         </div>
       </MacWindow>
